@@ -1,36 +1,32 @@
-# API Simples em Flask
+# API Flask – CRUD com SQLite
 
-Trabalho avaliativo de Programação Orientada a Objetos.
+Trabalho avaliativo de POO.
 
-A API possui:
-
-- CRUD básico de Usuários
-- Registro de Transações
-- Uso de classes (POO)
-- Rotas organizadas com Blueprint
-- Banco de dados simulado em memória
+### Funcionalidades:
+- CRUD de Usuários
+- CRUD completo de Transações
+- SQLite para persistência de dados
+- Estrutura simples usando Blueprints
 
 ## Como executar
 
 1. Instalar dependências:
-
+   
 pip install -r requirements.txt
 
-
-2. Executar:
+2. Executar a aplicação:
 
 python app.py
 
-
-## Endpoints
+3. Endpoints:
 
 ### Usuários
-
-GET /usuarios  
-POST /usuarios  
-GET /usuarios/<id>
+- GET /usuarios
+- POST /usuarios
+- GET /usuarios/<id>
 
 ### Transações
-
-GET /transacoes  
-POST /transacoes
+- GET /transacoes
+- POST /transacoes
+- PUT /transacoes/<id>
+- DELETE /transacoes/<id>
