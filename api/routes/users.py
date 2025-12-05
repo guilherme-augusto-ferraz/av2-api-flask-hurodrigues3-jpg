@@ -1,24 +1,36 @@
 from flask import Blueprint, request, jsonify
-from models.user import Usuario
-from database import usuarios
+from database import get_connection
 
-users_bp = Blueprint("users", __name__)
+users_bp = Blueprint("usuarios", __name__)
 
 @users_bp.route("/usuarios", methods=["GET"])
 def listar_usuarios():
-    return jsonify([u.to_dict() for u in usuarios])
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM usuarios;")
+    dados = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(dados)
 
 @users_bp.route("/usuarios", methods=["POST"])
 def criar_usuario():
-    data = request.json
-    novo_id = len(usuarios) + 1
-    usuario = Usuario(novo_id, data["nome"], data["email"])
-    usuarios.append(usuario)
-    return jsonify(usuario.to_dict()), 201
+    dados = request.get_json()
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO usuarios (nome, email) VALUES (?, ?)", 
+                   (dados["nome"], dados["email"]))
+    conn.commit()
+    conn.close()
+    return jsonify({"mensagem": "Usuário criado"}), 201
 
 @users_bp.route("/usuarios/<int:id>", methods=["GET"])
 def buscar_usuario(id):
-    for u in usuarios:
-        if u.id == id:
-            return jsonify(u.to_dict())
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM usuarios WHERE id=?", (id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if row:
+        return jsonify(dict(row))
     return jsonify({"erro": "Usuário não encontrado"}), 404
