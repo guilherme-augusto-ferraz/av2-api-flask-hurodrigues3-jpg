@@ -1,15 +1,14 @@
 from flask import Flask
 from routes.users import users_bp
-from routes.transacoes import transacoes_bp
+from routes.transacoes import trans_bp
+from database import criar_tabelas
 
 app = Flask(__name__)
 
-app.register_blueprint(users_bp)
-app.register_blueprint(transacoes_bp)
+criar_tabelas()
 
-@app.route("/")
-def home():
-    return {"mensagem": "API simples em Flask funcionando!"}
+app.register_blueprint(users_bp)
+app.register_blueprint(trans_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)
